@@ -122,10 +122,12 @@ class HoughLineDetector:
         lines = self.adaptive_hough_threshold()
         self.draw_lines(lines)
         cv2.imshow('Lines Detected', self.resized_image)
-        cv2.waitKey(0)
+        cv2.waitKey(3000)
         cv2.destroyAllWindows()
 
 def main():
-    print('Hello, World!')
-    #detector = HoughLineDetector('your_image.jpg')
-    #detector.process()
+    detector = HoughLineDetector('src/houghtransform/img/two_lines.png')
+    detector.process()
+
+if __name__=='__main__':
+    main()

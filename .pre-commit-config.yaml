@@ -11,12 +11,12 @@ repos:
           entry: poetry run flake8
           language: system
           types: [python]
-      - id: run-tests
-        name: Run tests with nox
-        entry: nox -rs tests  
-        language: python
-        pass_filenames: false
-        additional_dependencies:
-        - nox
+      -   id: run-tests
+          name: Run tests with nox
+          entry: nox -rs tests  
+          language: python
+          pass_filenames: false
+          additional_dependencies:
+          - nox
       
 

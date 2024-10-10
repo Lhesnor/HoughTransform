@@ -5,7 +5,6 @@ from houghtransform.hough_detector import HoughLineDetector
 
 
 class TestHoughLineDetector(unittest.TestCase):
-
     def setUp(self):
         self.test_image = "src/houghtransform/img/two_lines.png"
 

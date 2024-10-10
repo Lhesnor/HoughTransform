@@ -25,7 +25,9 @@ class HoughLineDetector:
     def read_image(self):
         img = cv2.imread(self.image_path)
         if img is None:
-            raise ValueError(f"Image at {self.image_path} could not be loaded.")
+            raise ValueError(
+                f"Image at {self.image_path} could not be loaded."
+            )
         return img
 
     def resize_image(self, new_width, new_height):
@@ -63,10 +65,12 @@ class HoughLineDetector:
         for i in range(1, height - 1):
             for j in range(1, width - 1):
                 gx = np.sum(
-                    sobel_x * self.grayscale_image[i - 1 : i + 2, j - 1 : j + 2]
+                    sobel_x
+                    * self.grayscale_image[i - 1 : i + 2, j - 1 : j + 2]
                 )
                 gy = np.sum(
-                    sobel_y * self.grayscale_image[i - 1 : i + 2, j - 1 : j + 2]
+                    sobel_y
+                    * self.grayscale_image[i - 1 : i + 2, j - 1 : j + 2]
                 )
                 gradient = math.sqrt(gx**2 + gy**2)
                 edges[i, j] = min(255, int(gradient))
@@ -85,7 +89,10 @@ class HoughLineDetector:
                 if self.edges[y, x] > 0:
                     for theta_index in range(len(thetas)):
                         theta = thetas[theta_index]
-                        rho = int(x * np.cos(theta) + y * np.sin(theta)) + diag_len
+                        rho = (
+                            int(x * np.cos(theta) + y * np.sin(theta))
+                            + diag_len
+                        )
                         accumulator[rho, theta_index] += 1
 
         lines = []

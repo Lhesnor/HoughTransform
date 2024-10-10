@@ -4,6 +4,21 @@ import math
 
 
 class HoughLineDetector:
+    """
+    A class for detecting lines in an image using Hough Transform.
+
+    Attributes:
+        image_path (str): The path to the image file.
+        target_min_lines (int): Minimum number of lines to detect.
+        target_max_lines (int): Maximum number of lines to detect.
+        rho_res (float): Distance resolution of the accumulator in pixels.
+        theta_res (float): Angle resolution of the accumulator in radians.
+        image (ndarray): The loaded image.
+        resized_image (ndarray): The resized image.
+        grayscale_image (ndarray): The grayscale version of the image.
+        edges (ndarray): The result of edge detection.
+    """
+
     def __init__(
         self,
         image_path,
@@ -12,6 +27,16 @@ class HoughLineDetector:
         rho_res=1,
         theta_res=np.pi / 180,
     ):
+        """
+        Initializes the HoughLineDetector with the given parameters.
+
+        Args:
+            image_path (str): Path to the image.
+            target_min_lines (int): Minimum lines to detect.
+            target_max_lines (int): Maximum lines to detect.
+            rho_res (float): Distance resolution in pixels.
+            theta_res (float): Angle resolution in radians.
+        """
         self.image_path = image_path
         self.target_min_lines = target_min_lines
         self.target_max_lines = target_max_lines
@@ -23,12 +48,31 @@ class HoughLineDetector:
         self.edges = self.sobel_edge_detection()
 
     def read_image(self):
+        """
+        Reads an image from the specified file path.
+
+        Raises:
+            ValueError: If the image could not be loaded.
+
+        Returns:
+            ndarray: The loaded image.
+        """
         img = cv2.imread(self.image_path)
         if img is None:
             raise ValueError(f"Image at {self.image_path} could not be loaded.")
         return img
 
     def resize_image(self, new_width, new_height):
+        """
+        Resizes the image to the specified dimensions.
+
+        Args:
+            new_width (int): The target width of the image.
+            new_height (int): The target height of the image.
+
+        Returns:
+            ndarray: The resized image.
+        """
         height, width = self.image.shape[:2]
         resized = np.zeros((new_height, new_width, 3), dtype=np.uint8)
         x_ratio = width / new_width
@@ -43,6 +87,12 @@ class HoughLineDetector:
         return resized
 
     def to_grayscale(self):
+        """
+        Converts the resized image to grayscale.
+
+        Returns:
+            ndarray: The grayscale image.
+        """
         height, width = self.resized_image.shape[:2]
         grayscale = np.zeros((height, width), dtype=np.uint8)
 
@@ -54,6 +104,12 @@ class HoughLineDetector:
         return grayscale
 
     def sobel_edge_detection(self):
+        """
+        Detects edges in the grayscale image using the Sobel operator.
+
+        Returns:
+            ndarray: The edges of the image.
+        """
         height, width = self.grayscale_image.shape
         edges = np.zeros((height, width), dtype=np.uint8)
 
@@ -74,6 +130,15 @@ class HoughLineDetector:
         return edges
 
     def hough_transform(self, threshold):
+        """
+        Performs the Hough Transform to detect lines in the edge-detected image.
+
+        Args:
+            threshold (int): The threshold to use in the Hough Transform.
+
+        Returns:
+            list: A list of detected lines represented as (rho, theta).
+        """
         height, width = self.edges.shape
         diag_len = int(np.sqrt(height**2 + width**2))
         rhos = np.arange(-diag_len, diag_len, self.rho_res)
@@ -99,6 +164,12 @@ class HoughLineDetector:
         return lines
 
     def adaptive_hough_threshold(self):
+        """
+        Adapts the Hough Transform threshold to find an optimal number of lines.
+
+        Returns:
+            list: A list of lines detected with the adapted threshold.
+        """
         low, high = 10, 1000
         best_lines = []
 
@@ -119,6 +190,12 @@ class HoughLineDetector:
         return best_lines
 
     def draw_lines(self, lines):
+        """
+        Draws detected lines on the resized image.
+
+        Args:
+            lines (list): A list of lines where each line is represented as (rho, theta).
+        """
         for rho, theta in lines:
             a = np.cos(theta)
             b = np.sin(theta)
@@ -131,6 +208,9 @@ class HoughLineDetector:
             cv2.line(self.resized_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
     def process(self):
+        """
+        Runs the entire process of detecting and drawing lines on the image.
+        """
         lines = self.adaptive_hough_threshold()
         self.draw_lines(lines)
         cv2.imshow("Lines Detected", self.resized_image)
@@ -139,6 +219,9 @@ class HoughLineDetector:
 
 
 def main():
+    """
+    Main function to create the detector and start the line detection process.
+    """
     detector = HoughLineDetector("src/houghtransform/img/two_lines.png")
     detector.process()
 

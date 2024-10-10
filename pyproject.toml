@@ -21,6 +21,7 @@ nox = "^2024.10.9"
 flake8 = "^7.1.1"
 black = "^24.10.0"
 pre-commit = "^4.0.1"
+mypy = "^1.11.2"
 
 [build-system]
 requires = ["poetry-core"]

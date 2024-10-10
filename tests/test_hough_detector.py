@@ -1,22 +1,22 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 import numpy as np
-import cv2
 from houghtransform.hough_detector import HoughLineDetector
 
-class TestHoughLineDetector(unittest.TestCase):
-    
-    def setUp(self):
-        self.test_image = 'src/houghtransform/img/two_lines.png'
 
-    @patch('cv2.imread')
+class TestHoughLineDetector(unittest.TestCase):
+
+    def setUp(self):
+        self.test_image = "src/houghtransform/img/two_lines.png"
+
+    @patch("cv2.imread")
     def test_read_image_success(self, mock_imread):
         mock_imread.return_value = np.ones((400, 400, 3), dtype=np.uint8)
         detector = HoughLineDetector(self.test_image)
         self.assertIsNotNone(detector.image)
         self.assertEqual(detector.image.shape, (400, 400, 3))
 
-    @patch('cv2.imread')
+    @patch("cv2.imread")
     def test_read_image_failure(self, mock_imread):
         mock_imread.return_value = None
         with self.assertRaises(ValueError):
@@ -53,7 +53,7 @@ class TestHoughLineDetector(unittest.TestCase):
         lines = detector.adaptive_hough_threshold()
         self.assertIsInstance(lines, list)
 
-    @patch('cv2.line')
+    @patch("cv2.line")
     def test_draw_lines(self, mock_line):
         detector = HoughLineDetector(self.test_image)
         lines = [(100, np.pi / 4), (200, np.pi / 6)]
@@ -61,12 +61,14 @@ class TestHoughLineDetector(unittest.TestCase):
         detector.draw_lines(lines)
         self.assertEqual(mock_line.call_count, 2)
 
+
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) > 1:
-        test_image = sys.argv.pop()  
+        test_image = sys.argv.pop()
     else:
-        test_image = 'src/houghtransform/img/two_lines.png'
-    
+        test_image = "src/houghtransform/img/two_lines.png"
+
     TestHoughLineDetector.test_image = test_image
     unittest.main()
